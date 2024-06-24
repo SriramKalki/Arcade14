@@ -57,3 +57,15 @@ app.get('/posts', async (req, res) => {
     }
 });
 
+app.put('/posts/:id', async (req, res) => {
+    try {
+        const post = await BlogPost.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!post) {
+            return res.status(404).send();
+        }
+        res.status(200).send(post);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
