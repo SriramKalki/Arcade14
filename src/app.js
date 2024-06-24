@@ -32,3 +32,28 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+
+app.post('/posts', async (req, res) => {
+    const blogPost = new BlogPost({
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author
+    });
+
+    try {
+        const savedPost = await blogPost.save();
+        res.status(201).send(savedPost);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+app.get('/posts', async (req, res) => {
+    try {
+        const posts = await BlogPost.find();
+        res.status(200).send(posts);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
