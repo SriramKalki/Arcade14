@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost/blog-app', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -26,11 +28,7 @@ const blogPostSchema = new mongoose.Schema({
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.post('/posts', async (req, res) => {
@@ -69,3 +67,18 @@ app.put('/posts/:id', async (req, res) => {
     }
 });
 
+app.delete('/posts/:id', async (req, res) => {
+    try {
+        const post = await BlogPost.findByIdAndDelete(req.params.id);
+        if (!post) {
+            return res.status(404).send();
+        }
+        res.status(200).send(post);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});

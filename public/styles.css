@@ -26,6 +26,7 @@ form {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 form input, form textarea {
@@ -35,6 +36,12 @@ form input, form textarea {
     border: 1px solid #ccc;
     border-radius: 3px;
     width: 100%;
+    box-sizing: border-box;
+}
+
+form textarea {
+    height: 100px;
+    resize: vertical;
 }
 
 form button {
